@@ -1175,6 +1175,7 @@ void __not_in_flash_func(process_mapping)(bool auto_repeat) {
     gw_prof_mark(2);
     gw_turn_filter(gw_xy_in[0], gw_xy_in[1], now);  // v27: the cm/360 card's steady turn, after the gains
     gw_prof_mark(3);
+    gw_curve_decel_hold(gw_turn_frame());  // v77: the turn's frames get the curve but not the slow-down gain
     gw_curve_filter(gw_xy_in[0], gw_xy_in[1], now, gw_mouse_dpi());  // v30: the speed curve, on hand and turn alike
     gw_prof_mark(4);
     gw_turn_count_out(gw_xy_in[0], now);  // v34: count mode after the curve (the page's hand correction)

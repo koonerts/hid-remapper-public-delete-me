@@ -28,6 +28,9 @@ void gw_turn_count_out(const int32_t* x, uint64_t now_us);
 
 // once per frame on the frame's summed relative X and Y, after the direction gains; now_us = the frame's time
 void gw_turn_filter(int32_t* x, int32_t* y, uint64_t now_us);
+// v77: the last gw_turn_filter frame was the turn's (running, its last step included; not once a hand took over): the
+// speed curve's slow-down gain stays at 1.0 for it (gw_curve_decel_hold)
+bool gw_turn_frame(void);
 
 // changes of state (start, end): goes into the status's change nibble so the QT Py reads the block again
 uint8_t gw_turn_seq(void);

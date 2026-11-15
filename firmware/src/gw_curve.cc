@@ -273,7 +273,16 @@ static float __not_in_flash_func(decel_spd)(float v) {  // v = the speed, below 
 // v39: the stroke's peak and the slowest speed since it. A rise of 1.25x and 2 cm/s over that slowest is speeding up
 // again: a new peak, so only slowing down gets the gain. It eases toward its value by the speed's own smoothing (a =
 // 1 - e^(-dt/tau), 0 for the first frame from rest), so neither the switch at the peak nor a new rise is a step.
+static bool dc_hold = false;  // v77: this frame is the cm/360 card's turn (gw_curve_decel_hold)
+void gw_curve_decel_hold(bool hold) {
+    dc_hold = hold;
+}
+
 static float __not_in_flash_func(decel_step)(float a) {
+    if (dc_hold) {  // v77: the turn: no slow-down, and no stroke (a hand moving within 50 ms after it starts a new one)
+        dc_stroke();  // dc_gn = 1.0
+        return dc_gn;
+    }
     if (lt_pn(spd, GW_CURVE_STILL)) {  // v42: still: the stroke is over (at 40,000 DPI a resting mouse's stray counts never
         dc_stroke();             // leave the 50 ms gap, so slow aim after a rest kept the last flick's peak and its lowest gain)
         return dc_gn;

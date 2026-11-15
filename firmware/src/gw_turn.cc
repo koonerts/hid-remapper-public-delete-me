@@ -87,7 +87,14 @@ void gw_turn_count_out(const int32_t* x, uint64_t now_us) {
     }
 }
 
+static bool turned = false;  // v77: the last frame's motion was the turn's (gw_turn_frame)
+
+bool gw_turn_frame(void) {
+    return turned;
+}
+
 void gw_turn_filter(int32_t* x, int32_t* y, uint64_t now_us) {
+    turned = false;
     if (x == nullptr) {
         return;
     }
@@ -115,6 +122,7 @@ void gw_turn_filter(int32_t* x, int32_t* y, uint64_t now_us) {
         set_state(GW_TURN_TIMEOUT);
         return;
     }
+    turned = true;  // v77: running (its last step too, as it ends below); not once a hand took over or it timed out
     uint64_t due = (uint64_t) rate * el / 1000000ull;
     if (due > (uint64_t) total_abs) {
         due = (uint64_t) total_abs;

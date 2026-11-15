@@ -30,6 +30,10 @@ void gw_curve_decel_set(bool on, uint8_t n, const uint16_t* p10, const uint16_t*
 // v73: bit 2 = the flick threshold follows the points (0.1 cm/s uint16, last). v75: bit 3 = a reversal (moving more than
 // 90 degrees away from the stroke's peak direction) ends the stroke; clear = direction-blind, as before
 void gw_curve_decel_link(const uint8_t* d, uint8_t len);
+// v77: hold = the next gw_curve_filter frame is the cm/360 card's turn (gw_turn_frame, set every frame): the slow-down
+// gain stays at 1.0 and the motion is no stroke. A steady turn's count rounding dipped the smoothed speed just under its
+// peak, where a table cuts hardest, and took 0.1-0.9% off a turn. The curve itself applies as before
+void gw_curve_decel_hold(bool hold);
 
 // once per frame on the frame's summed relative X and Y, after the turn (whose steady motion is a hand speed too);
 // now_us = the frame's time; dpi = the mouse's DPI now (0 = unknown)
